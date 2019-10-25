@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t beingjd/docker-nodeauth -f Dockerfile .
+
+script:
+  - docker run -e CI=true beingjd/docker-nodeauth npm test
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'ap-south-1'
+  app: 'docker-nodeauth'
+  env: 'DockerNodeauth-env'
+  bucket_name: 'elasticbeanstalk-ap-south-1-583044482327'
+  bucket_path: 'docker-nodeauth'
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
